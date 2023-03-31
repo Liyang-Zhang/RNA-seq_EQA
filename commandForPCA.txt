@@ -1,0 +1,30 @@
+count=read.table("D:/cipher_since_May_2015/projects/RNA_seq/lncRNA/result_ref/normaliedBetweenThreeGroup/Gene.Count.matrix", header = TRUE, quote = '\t')
+head(count)
+countMatrix=as.matrix(count[2:7])
+rownames(countMatrix)=count[,1]
+sampleNames=c(colnames(count)[2:7])
+table2=data.frame(name=c("Cont.1","Cont.2","X12Hr.1","X12Hr.2", "X24Hr.1", "X24Hr.2"),condition=c("Cont","Cont","X12Hr","X12Hr", "X24Hr", "X24Hr"))
+rownames(table2)=sampleNames
+dds <- DESeqDataSetFromMatrix(countMatrix, colData=table2, design= ~ condition)
+dds <- dds[ rowSums(counts(dds)) > 1, ]
+rld <- rlog(dds)
+pdf("D:/cipher_since_May_2015/projects/RNA_seq/lncRNA/result_ref/allGene.PCA.pdf")
+plotPCA(rld, intgroup=c("name","condition"))
+dev.off()
+
+
+count=read.table("D:/cipher_since_May_2015/projects/RNA_seq/lncRNA/result_ref/normaliedBetweenThreeGroup/Gene.lnc.Count.clean.matrix", header = TRUE, quote = '\t')
+countMatrix=as.matrix(count[4:9])
+colnames(countMatrix)=c("Cont.1","Cont.2","X12Hr.1","X12Hr.2", "X24Hr.1", "X24Hr.2") 
+rownames(countMatrix)=count[,1]  
+sampleNames=c("Cont.1","Cont.2","X12Hr.1","X12Hr.2", "X24Hr.1", "X24Hr.2")
+table2=data.frame(name=c("Cont.1","Cont.2","X12Hr.1","X12Hr.2", "X24Hr.1", "X24Hr.2"),condition=c("Cont","Cont","X12Hr","X12Hr", "X24Hr", "X24Hr"))
+rownames(table2)=sampleNames
+dds <- DESeqDataSetFromMatrix(countMatrix, colData=table2, design= ~ condition)
+dds <- dds[ rowSums(counts(dds)) > 1, ]
+rld <- rlog(dds)
+pdf("D:/cipher_since_May_2015/projects/RNA_seq/lncRNA/result_ref/lncRNA.PCA.pdf")
+plotPCA(rld, intgroup=c("name","condition"), main="PCA plot based on lncRNA expression")
+dev.off()
+
+
